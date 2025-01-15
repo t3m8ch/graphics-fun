@@ -1,5 +1,9 @@
 # Run
 
 ```sh
-cmake . && cmake --build ./build && ./build/GraphicsFun
+mkdir build
+cd build
+cmake ..
+make
+./GraphicsFun
 ```
