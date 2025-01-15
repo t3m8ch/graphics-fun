@@ -1,5 +1,6 @@
 #pragma once
 
+#include <vulkan/vulkan_core.h>
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 
@@ -16,6 +17,8 @@ public:
   Window &operator=(const Window&) = delete;
 
   bool shouldClose();
+  VkExtent2D getExtend() { return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)}; }
+  void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
 
 private:
   void initWindow();

@@ -1,6 +1,7 @@
 #include "window.hpp"
 
 #include <GLFW/glfw3.h>
+#include <stdexcept>
 
 namespace engine {
 
@@ -16,6 +17,12 @@ Window::~Window() {
 
 bool Window::shouldClose() {
   return glfwWindowShouldClose(window);
+}
+
+void Window::createWindowSurface(VkInstance instance, VkSurfaceKHR* surface) {
+  if (glfwCreateWindowSurface(instance, window, nullptr, surface) != VK_SUCCESS) {
+    throw std::runtime_error("Failed to create window surface");
+  }
 }
 
 void Window::initWindow() {
