@@ -10,6 +10,7 @@
 namespace engine {
 
 App::App() {
+  loadModels();
   createPipelineLayout();
   createPipeline();
   createCommandBuffers();
@@ -26,6 +27,16 @@ void App::run() {
   }
 
   vkDeviceWaitIdle(device.device());
+}
+
+void App::loadModels() {
+  std::vector<Model::Vertex> vertices = {
+    {{ 0.0f, -0.5f }},
+    {{ 0.5f, 0.5f }},
+    {{ -0.5f, 0.5f }}
+  };
+
+  model = std::make_unique<Model>(device, vertices);
 }
 
 void App::createPipelineLayout() {
@@ -98,7 +109,8 @@ void App::createCommandBuffers() {
     vkCmdBeginRenderPass(commandBuffers[i], &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
 
     pipeline->bind(commandBuffers[i]);
-    vkCmdDraw(commandBuffers[i], 3, 1, 0, 0);
+    model->bind(commandBuffers[i]);
+    model->draw(commandBuffers[i]);
 
     vkCmdEndRenderPass(commandBuffers[i]);
     if (vkEndCommandBuffer(commandBuffers[i]) != VK_SUCCESS) {

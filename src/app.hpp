@@ -1,5 +1,6 @@
 #pragma once
 
+#include "model.hpp"
 #include "window.hpp"
 #include "pipeline.hpp"
 #include "device.hpp"
@@ -25,6 +26,7 @@ public:
 
   void run();
 private:
+  void loadModels();
   void createPipelineLayout();
   void createPipeline();
   void createCommandBuffers();
@@ -37,6 +39,7 @@ private:
   std::unique_ptr<Pipeline> pipeline;
   VkPipelineLayout pipelineLayout;
   std::vector<VkCommandBuffer> commandBuffers;
+  std::unique_ptr<Model> model;
 };
 
 }
