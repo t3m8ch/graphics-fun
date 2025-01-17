@@ -1,4 +1,5 @@
 #include "app.hpp"
+#include "sierpinski.hpp"
 
 #include <array>
 #include <memory>
@@ -30,12 +31,13 @@ void App::run() {
 }
 
 void App::loadModels() {
-  std::vector<Model::Vertex> vertices = {
+  SierpinskiTriangle sierpinskiTriangle({
     {{ 0.0f, -0.5f }},
     {{ 0.5f, 0.5f }},
     {{ -0.5f, 0.5f }}
-  };
+  });
 
+  auto vertices = sierpinskiTriangle.calculate(4);
   model = std::make_unique<Model>(device, vertices);
 }
 
