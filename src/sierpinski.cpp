@@ -76,14 +76,14 @@ std::vector<Model::Vertex> SierpinskiTriangle::mapTrianglesToVertices(
   for (auto t : triangles) {
     std::array<Model::Vertex, 3> triangleVertices{};
 
-    triangleVertices[0].position.x = t.p0.x;
-    triangleVertices[0].position.y = t.p0.y;
+    triangleVertices[0].position = glm::vec2(t.p0.x, t.p0.y);
+    triangleVertices[0].color = glm::vec3(1.f, 0.f, 0.f);
 
-    triangleVertices[1].position.x = t.p1.x;
-    triangleVertices[1].position.y = t.p1.y;
+    triangleVertices[1].position = glm::vec2(t.p1.x, t.p1.y);
+    triangleVertices[1].color = glm::vec3(0.f, 1.f, 0.f);
 
-    triangleVertices[2].position.x = t.p2.x;
-    triangleVertices[2].position.y = t.p2.y;
+    triangleVertices[2].position = glm::vec2(t.p2.x, t.p2.y);
+    triangleVertices[2].color = glm::vec3(0.f, 0.f, 1.f);
 
     for (auto vertex : triangleVertices) {
       vertices.push_back(vertex);
