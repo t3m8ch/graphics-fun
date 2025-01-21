@@ -74,9 +74,9 @@ void App::createPipeline() {
 }
 
 void App::recreateSwapChain() {
-  auto extent = window.getExtend();
+  auto extent = window.getExtent();
   while (extent.width == 0 || extent.height == 0) {
-    extent = window.getExtend();
+    extent = window.getExtent();
     glfwWaitEvents();
   }
 
