@@ -4,7 +4,7 @@
 #include "window.hpp"
 #include "pipeline.hpp"
 #include "device.hpp"
-#include "swapchain.hpp"
+#include "renderer.hpp"
 
 #include <memory>
 #include <vector>
@@ -29,19 +29,14 @@ private:
   void loadGameObjects();
   void createPipelineLayout();
   void createPipeline();
-  void createCommandBuffers();
-  void freeCommandBuffers();
-  void drawFrame();
-  void recreateSwapChain();
-  void recordCommandBuffer(int imageIndex);
   void renderGameObjects(VkCommandBuffer commandBuffer);
 
   Window window{WIDTH, HEIGHT, "Hello, Vulkan"};
   Device device{window};
-  std::unique_ptr<SwapChain> swapChain;
+  Renderer renderer{window, device};
+
   std::unique_ptr<Pipeline> pipeline;
   VkPipelineLayout pipelineLayout;
-  std::vector<VkCommandBuffer> commandBuffers;
   std::vector<GameObject> gameObjects;
 };
 
