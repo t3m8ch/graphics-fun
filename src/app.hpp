@@ -31,11 +31,12 @@ private:
   void createPipeline();
   void createCommandBuffers();
   void drawFrame();
+  void recreateSwapChain();
+  void recordCommandBuffer(int imageIndex);
 
   Window window{WIDTH, HEIGHT, "Hello, Vulkan"};
   Device device{window};
-  SwapChain swapChain{device, window.getExtend()};
-
+  std::unique_ptr<SwapChain> swapChain;
   std::unique_ptr<Pipeline> pipeline;
   VkPipelineLayout pipelineLayout;
   std::vector<VkCommandBuffer> commandBuffers;
