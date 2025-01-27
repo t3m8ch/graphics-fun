@@ -19,7 +19,8 @@ SwapChain::SwapChain(Device &deviceRef, VkExtent2D extent,
 
 SwapChain::SwapChain(Device &deviceRef, VkExtent2D extent,
                      std::shared_ptr<SwapChain> previous)
-    : device{deviceRef}, windowExtent{extent}, oldSwapChain{previous} {
+    : device{deviceRef}, windowExtent{extent}, oldSwapChain{previous},
+      presentMode{previous->presentMode} {
   init();
   oldSwapChain = nullptr;
 }
@@ -390,12 +391,6 @@ VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(
 
 VkPresentModeKHR SwapChain::chooseSwapPresentMode(
     const std::vector<VkPresentModeKHR> &availablePresentModes) {
-  for (const auto &availablePresentMode : availablePresentModes) {
-    if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
-      return availablePresentMode;
-    }
-  }
-
   VkPresentModeKHR vkChosenPresentMode;
   if (presentMode == FIFO) {
     vkChosenPresentMode = VK_PRESENT_MODE_FIFO_KHR;
