@@ -10,7 +10,8 @@
 
 namespace engine {
 
-Renderer::Renderer(Window& window, Device& device) : window(window), device(device) {
+Renderer::Renderer(Window &window, Device &device)
+    : window(window), device(device) {
   recreateSwapChain();
   createCommandBuffers();
 }
@@ -33,7 +34,8 @@ void Renderer::recreateSwapChain() {
     swapChain = std::make_unique<SwapChain>(device, extent, oldSwapChain);
 
     if (!oldSwapChain->compareSwapFormats(*swapChain.get())) {
-      throw std::runtime_error("Swap chain image (or depth) format has changed!");
+      throw std::runtime_error(
+          "Swap chain image (or depth) format has changed!");
     }
   }
 }
@@ -47,18 +49,16 @@ void Renderer::createCommandBuffers() {
   allocInfo.commandPool = device.getCommandPool();
   allocInfo.commandBufferCount = static_cast<uint32_t>(commandBuffers.size());
 
-  if (vkAllocateCommandBuffers(device.device(), &allocInfo, commandBuffers.data()) != VK_SUCCESS) {
+  if (vkAllocateCommandBuffers(device.device(), &allocInfo,
+                               commandBuffers.data()) != VK_SUCCESS) {
     throw std::runtime_error("Failed to allocate command buffers");
   }
 }
 
 void Renderer::freeCommandBuffers() {
-  vkFreeCommandBuffers(
-    device.device(),
-    device.getCommandPool(),
-    static_cast<uint32_t>(commandBuffers.size()),
-    commandBuffers.data()
-  );
+  vkFreeCommandBuffers(device.device(), device.getCommandPool(),
+                       static_cast<uint32_t>(commandBuffers.size()),
+                       commandBuffers.data());
   commandBuffers.clear();
 }
 
@@ -96,9 +96,11 @@ void Renderer::endFrame() {
     throw std::runtime_error("Failed to record command buffer");
   }
 
-  auto result = swapChain->submitCommandBuffers(&commandBuffer, &currentImageIndex);
+  auto result =
+      swapChain->submitCommandBuffers(&commandBuffer, &currentImageIndex);
 
-  if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR || window.wasWindowResized()) {
+  if (result == VK_ERROR_OUT_OF_DATE_KHR || result == VK_SUBOPTIMAL_KHR ||
+      window.wasWindowResized()) {
     window.resetWindowResizedFlag();
     recreateSwapChain();
   } else if (result != VK_SUCCESS) {
@@ -110,11 +112,10 @@ void Renderer::endFrame() {
 }
 
 void Renderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
-  assert(isFrameStarted && "Can't call beginSwapChainRenderPass if frame is not in progress");
-  assert(
-    commandBuffer == getCurrentCommandBuffer() &&
-    "Can't begining render pass on command buffer from a different frame"
-  );
+  assert(isFrameStarted &&
+         "Can't call beginSwapChainRenderPass if frame is not in progress");
+  assert(commandBuffer == getCurrentCommandBuffer() &&
+         "Can't begining render pass on command buffer from a different frame");
 
   VkRenderPassBeginInfo renderPassInfo{};
   renderPassInfo.sType = VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO;
@@ -130,7 +131,8 @@ void Renderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
   renderPassInfo.clearValueCount = static_cast<uint32_t>(clearValues.size());
   renderPassInfo.pClearValues = clearValues.data();
 
-  vkCmdBeginRenderPass(commandBuffer, &renderPassInfo, VK_SUBPASS_CONTENTS_INLINE);
+  vkCmdBeginRenderPass(commandBuffer, &renderPassInfo,
+                       VK_SUBPASS_CONTENTS_INLINE);
 
   VkViewport viewport{};
   viewport.x = 0.f;
@@ -145,12 +147,11 @@ void Renderer::beginSwapChainRenderPass(VkCommandBuffer commandBuffer) {
 }
 
 void Renderer::endSwapChainRenderPass(VkCommandBuffer commandBuffer) {
-  assert(isFrameStarted && "Can't call endSwapChainRenderPass if frame is not in progress");
-  assert(
-    commandBuffer == getCurrentCommandBuffer() &&
-    "Can't end render pass on command buffer from a different frame"
-  );
+  assert(isFrameStarted &&
+         "Can't call endSwapChainRenderPass if frame is not in progress");
+  assert(commandBuffer == getCurrentCommandBuffer() &&
+         "Can't end render pass on command buffer from a different frame");
 
   vkCmdEndRenderPass(commandBuffer);
 }
-}
+} // namespace engine

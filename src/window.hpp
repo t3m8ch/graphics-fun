@@ -13,18 +13,21 @@ public:
   Window(int width, int height, std::string name);
   ~Window();
 
-  Window(const Window&) = delete;
-  Window &operator=(const Window&) = delete;
+  Window(const Window &) = delete;
+  Window &operator=(const Window &) = delete;
 
   bool shouldClose();
-  VkExtent2D getExtent() { return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)}; }
+  VkExtent2D getExtent() {
+    return {static_cast<uint32_t>(width), static_cast<uint32_t>(height)};
+  }
   bool wasWindowResized() { return framebufferResized; }
   void resetWindowResizedFlag() { framebufferResized = false; }
 
-  void createWindowSurface(VkInstance instance, VkSurfaceKHR* surface);
+  void createWindowSurface(VkInstance instance, VkSurfaceKHR *surface);
 
 private:
-  static void framebufferResizeCallback(GLFWwindow* window, int width, int height);
+  static void framebufferResizeCallback(GLFWwindow *window, int width,
+                                        int height);
   void initWindow();
 
   int width;
@@ -32,7 +35,7 @@ private:
   bool framebufferResized = false;
 
   std::string name;
-  GLFWwindow* window;
+  GLFWwindow *window;
 };
 
-}
+} // namespace engine

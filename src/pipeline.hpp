@@ -9,8 +9,8 @@
 namespace engine {
 
 struct PipelineConfigInfo {
-  PipelineConfigInfo(const PipelineConfigInfo&) = delete;
-  PipelineConfigInfo& operator=(const PipelineConfigInfo&) = delete;
+  PipelineConfigInfo(const PipelineConfigInfo &) = delete;
+  PipelineConfigInfo &operator=(const PipelineConfigInfo &) = delete;
 
   VkPipelineViewportStateCreateInfo viewportInfo;
   VkPipelineInputAssemblyStateCreateInfo inputAssemblyInfo;
@@ -28,36 +28,32 @@ struct PipelineConfigInfo {
 
 class Pipeline {
 public:
-  Pipeline(
-    Device& device,
-    const std::string& vertFilepath,
-    const std::string& fragFilepath,
-    const PipelineConfigInfo& configInfo
-  );
+  Pipeline(Device &device, const std::string &vertFilepath,
+           const std::string &fragFilepath,
+           const PipelineConfigInfo &configInfo);
 
   ~Pipeline();
 
-  Pipeline(const Pipeline&) = delete;
-  Pipeline& operator=(const Pipeline&) = delete;
+  Pipeline(const Pipeline &) = delete;
+  Pipeline &operator=(const Pipeline &) = delete;
 
   void bind(VkCommandBuffer commandBuffer);
-  static void defaultPipelineConfigInfo(PipelineConfigInfo& configInfo);
+  static void defaultPipelineConfigInfo(PipelineConfigInfo &configInfo);
 
 private:
-  static std::vector<char> readFile(const std::string& filePath);
+  static std::vector<char> readFile(const std::string &filePath);
 
-  void createGraphicsPipeline(
-    const std::string& vertFilepath,
-    const std::string& fragFilepath,
-    const PipelineConfigInfo& configInfo
-  );
+  void createGraphicsPipeline(const std::string &vertFilepath,
+                              const std::string &fragFilepath,
+                              const PipelineConfigInfo &configInfo);
 
-  void createShaderModule(const std::vector<char>& code, VkShaderModule* shaderModule);
+  void createShaderModule(const std::vector<char> &code,
+                          VkShaderModule *shaderModule);
 
-  Device& device;
+  Device &device;
   VkPipeline graphicsPipeline;
   VkShaderModule vertShaderModule;
   VkShaderModule fragShaderModule;
 };
 
-}
+} // namespace engine

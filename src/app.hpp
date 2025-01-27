@@ -1,9 +1,9 @@
 #pragma once
 
-#include "gameobject.hpp"
-#include "window.hpp"
 #include "device.hpp"
+#include "gameobject.hpp"
 #include "renderer.hpp"
+#include "window.hpp"
 
 #include <vector>
 
@@ -19,10 +19,11 @@ public:
   App();
   ~App();
 
-  App(const App&) = delete;
-  App& operator=(const App&) = delete;
+  App(const App &) = delete;
+  App &operator=(const App &) = delete;
 
   void run();
+
 private:
   void loadGameObjects();
 
@@ -33,4 +34,4 @@ private:
   std::vector<GameObject> gameObjects;
 };
 
-}
+} // namespace engine

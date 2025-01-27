@@ -5,7 +5,6 @@
 #include <cstdint>
 #include <memory>
 
-
 namespace engine {
 
 struct Transform2DComponent {
@@ -17,15 +16,9 @@ struct Transform2DComponent {
     const float s = glm::sin(rotation);
     const float c = glm::cos(rotation);
 
-    glm::mat2 rotationMat{
-      {c, s},
-      {-s, c}
-    };
+    glm::mat2 rotationMat{{c, s}, {-s, c}};
 
-    glm::mat2 scaleMat{
-      {scale.x, 0.f},
-      {0.f, scale.y}
-    };
+    glm::mat2 scaleMat{{scale.x, 0.f}, {0.f, scale.y}};
 
     return rotationMat * scaleMat;
   }
@@ -40,10 +33,10 @@ public:
     return GameObject{currentId++};
   }
 
-  GameObject(const GameObject&) = delete;
-  GameObject(GameObject&&) = default;
-  GameObject& operator=(const GameObject&) = delete;
-  GameObject& operator=(GameObject&&) = default;
+  GameObject(const GameObject &) = delete;
+  GameObject(GameObject &&) = default;
+  GameObject &operator=(const GameObject &) = delete;
+  GameObject &operator=(GameObject &&) = default;
 
   id_t getId() const { return id; }
 
@@ -57,4 +50,4 @@ private:
   id_t id;
 };
 
-}
+} // namespace engine

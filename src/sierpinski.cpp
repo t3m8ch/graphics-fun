@@ -1,14 +1,15 @@
 #include "sierpinski.hpp"
 
-#include <cmath>
 #include <array>
+#include <cmath>
 
 namespace engine {
 
-SierpinskiTriangle::SierpinskiTriangle(const std::vector<Model::Vertex>& triangle) {
-  this->triangle.p0 = { triangle[0].position.x, triangle[0].position.y };
-  this->triangle.p1 = { triangle[1].position.x, triangle[1].position.y };
-  this->triangle.p2 = { triangle[2].position.x, triangle[2].position.y };
+SierpinskiTriangle::SierpinskiTriangle(
+    const std::vector<Model::Vertex> &triangle) {
+  this->triangle.p0 = {triangle[0].position.x, triangle[0].position.y};
+  this->triangle.p1 = {triangle[1].position.x, triangle[1].position.y};
+  this->triangle.p2 = {triangle[2].position.x, triangle[2].position.y};
 }
 
 std::vector<Model::Vertex> SierpinskiTriangle::calculate(uint32_t n) {
@@ -27,10 +28,8 @@ std::vector<Model::Vertex> SierpinskiTriangle::calculate(uint32_t n) {
 }
 
 void SierpinskiTriangle::f(
-  std::vector<SierpinskiTriangle::Triangle>& triangles1,
-  std::vector<SierpinskiTriangle::Triangle>& triangles2,
-  uint32_t n
-) {
+    std::vector<SierpinskiTriangle::Triangle> &triangles1,
+    std::vector<SierpinskiTriangle::Triangle> &triangles2, uint32_t n) {
   if (n == 0) {
     return;
   }
@@ -43,33 +42,30 @@ void SierpinskiTriangle::f(
   f(triangles2, triangles1, n - 1);
 }
 
-SierpinskiTriangle::Point SierpinskiTriangle::mid(
-  SierpinskiTriangle::Point p0,
-  SierpinskiTriangle::Point p1
-) {
-  return { (p0.x + p1.x) / 2.f, (p0.y + p1.y) / 2.f };
+SierpinskiTriangle::Point
+SierpinskiTriangle::mid(SierpinskiTriangle::Point p0,
+                        SierpinskiTriangle::Point p1) {
+  return {(p0.x + p1.x) / 2.f, (p0.y + p1.y) / 2.f};
 }
 
 void SierpinskiTriangle::trip(
-  SierpinskiTriangle::Triangle t,
-  std::vector<SierpinskiTriangle::Triangle>& triangles
-) {
+    SierpinskiTriangle::Triangle t,
+    std::vector<SierpinskiTriangle::Triangle> &triangles) {
   auto mid_t0_t1 = mid(t.p0, t.p1);
   auto mid_t0_t2 = mid(t.p0, t.p2);
   auto mid_t1_t2 = mid(t.p1, t.p2);
 
-  triangles.push_back({ t.p0, mid_t0_t1, mid_t0_t2 });
-  triangles.push_back({ mid_t0_t1, t.p1, mid_t1_t2 });
-  triangles.push_back({ mid_t0_t2, mid_t1_t2, t.p2 });
+  triangles.push_back({t.p0, mid_t0_t1, mid_t0_t2});
+  triangles.push_back({mid_t0_t1, t.p1, mid_t1_t2});
+  triangles.push_back({mid_t0_t2, mid_t1_t2, t.p2});
 }
 
 uint32_t SierpinskiTriangle::caclulateTrianglesCount(uint32_t n) {
   return pow(3, n);
 }
 
-std::vector<Model::Vertex> SierpinskiTriangle::mapTrianglesToVertices(
-  std::vector<Triangle>& triangles
-) {
+std::vector<Model::Vertex>
+SierpinskiTriangle::mapTrianglesToVertices(std::vector<Triangle> &triangles) {
   std::vector<Model::Vertex> vertices;
   vertices.reserve(triangles.size() * 3);
 
@@ -93,4 +89,4 @@ std::vector<Model::Vertex> SierpinskiTriangle::mapTrianglesToVertices(
   return vertices;
 }
 
-}
+} // namespace engine
