@@ -1,9 +1,10 @@
 #include "app.hpp"
 #include "camera.hpp"
 #include "gameobject.hpp"
+#include "keyboard_movement_controller.hpp"
 #include "simple_render_system.hpp"
 
-#include <glm/trigonometric.hpp>
+#include <chrono>
 #include <memory>
 
 #define GLM_FORCE_RADIANS
@@ -11,6 +12,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/constants.hpp>
+#include <glm/trigonometric.hpp>
 #include <vulkan/vulkan_core.h>
 
 namespace engine {
@@ -82,13 +84,27 @@ void App::run() {
   SimpleRenderSystem simpleRenderSystem{device,
                                         renderer.getSwapChainRenderPass()};
   Camera camera{};
-  camera.setViewTarget(glm::vec3(-1.f, -2.f, 2.f), glm::vec3(0.f, 0.f, 2.5f));
 
+  auto viewerObject = GameObject::create();
+  KeyboardMovementController cameraController{};
+
+  auto currentTime = std::chrono::high_resolution_clock::now();
   while (!window.shouldClose()) {
     glfwPollEvents();
 
+    auto newTime = std::chrono::high_resolution_clock::now();
+    float frameTime =
+        std::chrono::duration<float, std::chrono::seconds::period>(newTime -
+                                                                   currentTime)
+            .count();
+    currentTime = newTime;
+
+    cameraController.moveInPlaneXZ(window.getGLFWwindow(), frameTime,
+                                   viewerObject);
+    camera.setViewYXZ(viewerObject.transform.translation,
+                      viewerObject.transform.rotation);
+
     float aspect = renderer.getAspectRatio();
-    // camera.setOrthographicProjection(-aspect, aspect, -1, 1, -1, 1);
     camera.setPerspectiveProjection(glm::radians(50.f), aspect, 0.1f, 10.f);
 
     if (auto commandBuffer = renderer.beginFrame()) {
