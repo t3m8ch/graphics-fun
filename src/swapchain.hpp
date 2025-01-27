@@ -11,9 +11,11 @@ namespace engine {
 
 class SwapChain {
 public:
+  enum PresentMode { FIFO, MAILBOX, IMMEDIATE };
+
   static constexpr int MAX_FRAMES_IN_FLIGHT = 2;
 
-  SwapChain(Device &deviceRef, VkExtent2D extent);
+  SwapChain(Device &deviceRef, VkExtent2D extent, PresentMode presentMode);
   SwapChain(Device &deviceRef, VkExtent2D extent,
             std::shared_ptr<SwapChain> previous);
   ~SwapChain();
@@ -55,6 +57,8 @@ private:
   void createRenderPass();
   void createFramebuffers();
   void createSyncObjects();
+
+  PresentMode presentMode;
 
   VkSurfaceFormatKHR chooseSwapSurfaceFormat(
       const std::vector<VkSurfaceFormatKHR> &availableFormats);

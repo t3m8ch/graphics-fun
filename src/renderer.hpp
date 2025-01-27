@@ -14,7 +14,7 @@ namespace engine {
 
 class Renderer {
 public:
-  Renderer(Window &window, Device &device);
+  Renderer(Window &window, Device &device, SwapChain::PresentMode presentMode);
   ~Renderer();
 
   Renderer(const Renderer &) = delete;
@@ -48,6 +48,7 @@ private:
 
   Window &window;
   Device &device;
+  SwapChain::PresentMode presentMode;
   std::unique_ptr<SwapChain> swapChain;
   std::vector<VkCommandBuffer> commandBuffers;
 

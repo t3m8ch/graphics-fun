@@ -14,7 +14,9 @@
 
 namespace engine {
 
-App::App() { loadGameObjects(); }
+App::App(SwapChain::PresentMode presentMode) : presentMode(presentMode) {
+  loadGameObjects();
+}
 
 App::~App() {}
 

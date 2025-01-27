@@ -10,8 +10,9 @@
 
 namespace engine {
 
-Renderer::Renderer(Window &window, Device &device)
-    : window(window), device(device) {
+Renderer::Renderer(Window &window, Device &device,
+                   SwapChain::PresentMode presentMode)
+    : window(window), device(device), presentMode(presentMode) {
   recreateSwapChain();
   createCommandBuffers();
 }
@@ -28,7 +29,7 @@ void Renderer::recreateSwapChain() {
   vkDeviceWaitIdle(device.device());
 
   if (swapChain == nullptr) {
-    swapChain = std::make_unique<SwapChain>(device, extent);
+    swapChain = std::make_unique<SwapChain>(device, extent, presentMode);
   } else {
     std::shared_ptr<SwapChain> oldSwapChain = std::move(swapChain);
     swapChain = std::make_unique<SwapChain>(device, extent, oldSwapChain);

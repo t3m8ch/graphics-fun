@@ -3,14 +3,17 @@
 #include <array>
 #include <cstdlib>
 #include <cstring>
+#include <iostream>
 #include <limits>
 #include <stdexcept>
+
 #include <vulkan/vulkan_core.h>
 
 namespace engine {
 
-SwapChain::SwapChain(Device &deviceRef, VkExtent2D extent)
-    : device{deviceRef}, windowExtent{extent} {
+SwapChain::SwapChain(Device &deviceRef, VkExtent2D extent,
+                     PresentMode presentMode)
+    : device{deviceRef}, windowExtent{extent}, presentMode{presentMode} {
   init();
 }
 
@@ -387,7 +390,31 @@ VkSurfaceFormatKHR SwapChain::chooseSwapSurfaceFormat(
 
 VkPresentModeKHR SwapChain::chooseSwapPresentMode(
     const std::vector<VkPresentModeKHR> &availablePresentModes) {
-  return VK_PRESENT_MODE_IMMEDIATE_KHR;
+  for (const auto &availablePresentMode : availablePresentModes) {
+    if (availablePresentMode == VK_PRESENT_MODE_MAILBOX_KHR) {
+      return availablePresentMode;
+    }
+  }
+
+  VkPresentModeKHR vkChosenPresentMode;
+  if (presentMode == FIFO) {
+    vkChosenPresentMode = VK_PRESENT_MODE_FIFO_KHR;
+  } else if (presentMode == MAILBOX) {
+    vkChosenPresentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+  } else if (presentMode == IMMEDIATE) {
+    vkChosenPresentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
+  }
+
+  for (const auto &availablePresentMode : availablePresentModes) {
+    if (availablePresentMode == vkChosenPresentMode) {
+      std::cout << "Chosen present mode is available!" << std::endl;
+      return vkChosenPresentMode;
+    }
+  }
+
+  std::cerr << "Chosen present mode is not available! FIFO will be used"
+            << std::endl;
+  return VK_PRESENT_MODE_FIFO_KHR;
 }
 
 VkExtent2D
