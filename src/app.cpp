@@ -1,6 +1,5 @@
 #include "app.hpp"
 #include "gameobject.hpp"
-#include "sierpinski.hpp"
 #include "simple_render_system.hpp"
 
 #include <memory>
@@ -13,6 +12,63 @@
 #include <vulkan/vulkan_core.h>
 
 namespace engine {
+
+std::unique_ptr<Model> createCubeModel(Device &device, glm::vec3 offset) {
+  std::vector<Model::Vertex> vertices{
+      // left face (white)
+      {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+      {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+      {{-.5f, -.5f, .5f}, {.9f, .9f, .9f}},
+      {{-.5f, -.5f, -.5f}, {.9f, .9f, .9f}},
+      {{-.5f, .5f, -.5f}, {.9f, .9f, .9f}},
+      {{-.5f, .5f, .5f}, {.9f, .9f, .9f}},
+
+      // right face (yellow)
+      {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+      {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+      {{.5f, -.5f, .5f}, {.8f, .8f, .1f}},
+      {{.5f, -.5f, -.5f}, {.8f, .8f, .1f}},
+      {{.5f, .5f, -.5f}, {.8f, .8f, .1f}},
+      {{.5f, .5f, .5f}, {.8f, .8f, .1f}},
+
+      // top face (orange, remember y axis points down)
+      {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+      {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+      {{-.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+      {{-.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+      {{.5f, -.5f, -.5f}, {.9f, .6f, .1f}},
+      {{.5f, -.5f, .5f}, {.9f, .6f, .1f}},
+
+      // bottom face (red)
+      {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+      {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+      {{-.5f, .5f, .5f}, {.8f, .1f, .1f}},
+      {{-.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+      {{.5f, .5f, -.5f}, {.8f, .1f, .1f}},
+      {{.5f, .5f, .5f}, {.8f, .1f, .1f}},
+
+      // nose face (blue)
+      {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+      {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+      {{-.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+      {{-.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+      {{.5f, -.5f, 0.5f}, {.1f, .1f, .8f}},
+      {{.5f, .5f, 0.5f}, {.1f, .1f, .8f}},
+
+      // tail face (green)
+      {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+      {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+      {{-.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+      {{-.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+      {{.5f, -.5f, -0.5f}, {.1f, .8f, .1f}},
+      {{.5f, .5f, -0.5f}, {.1f, .8f, .1f}},
+
+  };
+  for (auto &v : vertices) {
+    v.position += offset;
+  }
+  return std::make_unique<Model>(device, vertices);
+}
 
 App::App(SwapChain::PresentMode presentMode) : presentMode(presentMode) {
   loadGameObjects();
@@ -39,27 +95,14 @@ void App::run() {
 }
 
 void App::loadGameObjects() {
-  SierpinskiTriangle sierpinskiTriangle(
-      {{{0.0f, -0.5f}}, {{0.5f, 0.5f}}, {{-0.5f, 0.5f}}});
-  auto vertices = sierpinskiTriangle.calculate(9);
-  auto model = std::make_shared<Model>(device, vertices);
+  std::shared_ptr<Model> model = createCubeModel(device, {0.f, 0.f, 0.f});
 
-  std::vector<glm::vec3> colors{{1.f, .7f, .73f},
-                                {1.f, .87f, .73f},
-                                {1.f, 1.f, .73f},
-                                {.73f, 1.f, .8f},
-                                {.73, .88f, 1.f}};
-  for (auto &color : colors) {
-    color = glm::pow(color, glm::vec3{2.2f});
-  }
-  for (int i = 0; i < 40; i++) {
-    auto triangle = GameObject::create();
-    triangle.model = model;
-    triangle.transform2D.scale = glm::vec2(.5f) + i * 0.025f;
-    triangle.transform2D.rotation = i * glm::pi<float>() * .025f;
-    triangle.color = colors[i % colors.size()];
-    gameObjects.push_back(std::move(triangle));
-  }
+  auto cube = GameObject::create();
+  cube.model = model;
+  cube.transform.translation = {0.f, 0.f, 0.5f};
+  cube.transform.scale = {0.5f, 0.5f, 0.5f};
+
+  gameObjects.push_back(std::move(cube));
 }
 
 } // namespace engine
