@@ -3,6 +3,9 @@ project(GraphicsFun)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+add_subdirectory(external/tinyobjloader)
 
 find_package(Vulkan REQUIRED)
 find_package(glfw3 REQUIRED)
@@ -14,4 +17,4 @@ include_directories(/usr/include)
 
 add_executable(GraphicsFun ${SOURCES})
 
-target_link_libraries(GraphicsFun Vulkan::Vulkan glfw)
+target_link_libraries(GraphicsFun Vulkan::Vulkan glfw tinyobjloader)
