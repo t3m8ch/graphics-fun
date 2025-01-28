@@ -90,7 +90,7 @@ void App::loadGameObjects() {
 
   auto gameObj = GameObject::create();
   gameObj.model = model;
-  gameObj.transform.translation = {0.f, 0.f, 2.5f};
+  gameObj.transform.translation = {0.f, 0.5f, 2.5f};
   gameObj.transform.scale = glm::vec3(3.f);
 
   gameObjects.push_back(std::move(gameObj));
