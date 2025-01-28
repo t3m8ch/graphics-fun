@@ -85,15 +85,25 @@ void App::run() {
 }
 
 void App::loadGameObjects() {
-  std::shared_ptr<Model> model =
+  std::shared_ptr<Model> smoothVaseModel =
       Model::createFromFile(device, "../models/smooth_vase.obj");
 
-  auto gameObj = GameObject::create();
-  gameObj.model = model;
-  gameObj.transform.translation = {0.f, 0.5f, 2.5f};
-  gameObj.transform.scale = glm::vec3(3.f);
+  auto smoothVaseObj = GameObject::create();
+  smoothVaseObj.model = smoothVaseModel;
+  smoothVaseObj.transform.translation = {-0.5f, 0.5f, 2.5f};
+  smoothVaseObj.transform.scale = glm::vec3(3.f);
 
-  gameObjects.push_back(std::move(gameObj));
+  gameObjects.push_back(std::move(smoothVaseObj));
+
+  std::shared_ptr<Model> flatVaseModel =
+      Model::createFromFile(device, "../models/flat_vase.obj");
+
+  auto flatVaseObj = GameObject::create();
+  flatVaseObj.model = flatVaseModel;
+  flatVaseObj.transform.translation = {0.5f, 0.5f, 2.5f};
+  flatVaseObj.transform.scale = glm::vec3(3.f);
+
+  gameObjects.push_back(std::move(flatVaseObj));
 }
 
 } // namespace engine
