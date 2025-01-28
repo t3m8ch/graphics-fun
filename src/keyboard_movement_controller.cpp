@@ -1,6 +1,8 @@
 #include "keyboard_movement_controller.hpp"
 #include <GLFW/glfw3.h>
 #include <glm/geometric.hpp>
+#include <iomanip>
+#include <iostream>
 #include <limits>
 
 namespace engine {
@@ -65,10 +67,15 @@ void KeyboardMovementController::moveInPlaneXZ(GLFWwindow *window, float dt,
     moveDir -= upDir;
   }
 
-  if (glm::dot(moveDir, moveDir) > std::numeric_limits<float>::epsilon()) {
-    gameObject.transform.translation +=
-        moveSpeed * dt * glm::normalize(moveDir);
-  }
+  static glm::vec3 velocity{0.f};
+  velocity += moveSpeed * dt * moveDir;
+  gameObject.transform.translation += velocity * dt;
+  velocity *= 0.99f;
+
+  float currentSpeed = glm::length(velocity);
+
+  std::cout << "\rSpeed: " << std::fixed << std::setprecision(2) << currentSpeed
+            << " units/sec" << std::flush;
 }
 
 } // namespace engine
